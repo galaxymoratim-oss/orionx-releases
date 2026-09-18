@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">OrionX</string>
+    <string name="new_message">Новае паведамленне</string>
+    <string name="notification_channel_messages">Паведамленні OrionX</string>
+</resources>

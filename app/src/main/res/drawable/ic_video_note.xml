@@ -1,0 +1,16 @@
+<!--
+  Значок кружка из макета: `width:25px;height:25px;border-radius:8px;border:2.5px solid`
+  (content-box, то есть 30px по внешнему краю) и внутри круг 11px с той же обводкой.
+  В системе 100×100 это 30dp: обводка 8.33, средняя линия квадрата 4.17..95.83 с радиусом
+  22.5, круг радиусом 14.17 по центру.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp" android:height="30dp"
+    android:viewportWidth="100" android:viewportHeight="100">
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="8.33" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M26.67,4.17 L73.33,4.17 A22.5,22.5 0 0 1 95.83,26.67 L95.83,73.33 A22.5,22.5 0 0 1 73.33,95.83 L26.67,95.83 A22.5,22.5 0 0 1 4.17,73.33 L4.17,26.67 A22.5,22.5 0 0 1 26.67,4.17 Z" />
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="8.33" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M35.83,50 A14.17,14.17 0 1 0 64.17,50 A14.17,14.17 0 1 0 35.83,50 Z" />
+</vector>

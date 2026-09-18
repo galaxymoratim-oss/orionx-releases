@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "416210434789",
+    "project_id": "orionx-8524f",
+    "storage_bucket": "orionx-8524f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:416210434789:android:705462e2ab09e07d61f20c",
+        "android_client_info": {
+          "package_name": "net.orionx.messenger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcAxBLEuYJXF0a7ruLJ8GHY-fLLKoz08A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

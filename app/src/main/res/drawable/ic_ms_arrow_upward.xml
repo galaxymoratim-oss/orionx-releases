@@ -1,0 +1,10 @@
+<!--
+  `arrow_upward` из Material Symbols Rounded (wght 650) — ровно тот шрифт, которым набран
+  макет. Контур снят с отрисованного глифа, масштаб натуральный: 24 юнита = кегль.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd"
+        android:pathData="M11.67,3.61 L12.19,3.56 L12.94,3.94 L19.73,10.73 L20.02,11.3 L19.92,12.23 L19.31,12.94 L18.84,13.13 L18,13.03 L13.45,8.67 L13.36,8.86 L13.45,9.05 L13.45,18.89 L13.36,19.36 L13.08,19.83 L12.19,20.34 L11.72,20.34 L10.97,19.97 L10.55,19.36 L10.45,18.89 L10.45,9.05 L10.55,8.95 L10.45,8.67 L6.09,12.94 L5.63,13.13 L4.78,13.03 L4.08,12.42 L3.89,11.95 L3.89,11.3 L4.27,10.64 L10.97,3.94 L11.67,3.61Z" />
+</vector>

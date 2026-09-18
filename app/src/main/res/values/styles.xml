@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.OrionX" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <!-- Last stop of the redesign gradient, so the cold-start flash matches the app. -->
+        <item name="android:windowBackground">#0B0C12</item>
+        <item name="android:colorAccent">#6D7BFF</item>
+        <!-- The app draws its gradient edge to edge; the bars stay transparent. -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <!-- Android 12+ рисует системный splash с иконкой приложения; по требованию
+             дизайна лого-экран при запуске не нужен — остаётся только фон градиента. -->
+        <item name="android:windowSplashScreenBackground">#0B0C12</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_transparent</item>
+    </style>
+</resources>

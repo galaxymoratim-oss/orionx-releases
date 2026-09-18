@@ -1,0 +1,10 @@
+<!--
+  `play_arrow` из Material Symbols Rounded (wght 650, FILL 0) — тем же шрифтом набран макет.
+  Контур снят с отрисованного глифа, масштаб натуральный: 24 юнита = кегль.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd"
+        android:pathData="M7.83,5.44 L8.34,5.48 L8.91,5.77 L13.5,8.77 L14.53,9.33 L14.81,9.61 L16.59,10.64 L17.11,11.06 L17.39,11.63 L17.3,12.56 L16.78,13.17 L15.75,13.73 L8.81,18.23 L8.16,18.52 L7.69,18.52 L7.22,18.33 L6.7,17.81 L6.52,17.16 L6.52,6.75 L6.61,6.28 L6.8,6 L7.13,5.67 L7.83,5.44Z M9.33,9.38 L9.56,9.42 L13.36,11.91 L13.22,12.14 L9.38,14.58 L9.33,9.38Z" />
+</vector>

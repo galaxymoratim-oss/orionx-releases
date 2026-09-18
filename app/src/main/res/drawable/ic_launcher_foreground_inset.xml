@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Логотип внутри адаптивной иконки: знак чуть меньше маски,
+     чтобы углы «X» не подрезались круглой/скруглённой маской лаунчера. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/orionx_logo_light"
+    android:insetLeft="12dp"
+    android:insetTop="12dp"
+    android:insetRight="12dp"
+    android:insetBottom="12dp" />
