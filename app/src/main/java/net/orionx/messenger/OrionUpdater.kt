@@ -451,19 +451,37 @@ fun XUpdateChecker(api: SupabaseApi, session: CloudSession) {
         val scope = rememberCoroutineScope()
 
         Dialog(onDismissRequest = { if (!downloading) dismissed = true }) {
-            Surface(color = USurface, shape = RoundedCornerShape(22.dp), border = BorderStroke(1.dp, UBorder)) {
+            Surface(color = USurface, shape = RoundedCornerShape(26.dp), border = BorderStroke(1.dp, UBorder)) {
                 Column(Modifier.fillMaxWidth().padding(0.dp)) {
                     if (!r.imageUrl.isNullOrBlank()) {
                         RemoteUpdateImage(r.imageUrl, Modifier.fillMaxWidth().height(180.dp))
                     }
-                    Column(Modifier.padding(20.dp)) {
-                        Text("Доступно обновление", color = UMuted, fontSize = 13.sp)
-                        // Version font is 15% larger than the body text (body 16sp -> ~18.4sp).
-                        Text(r.version, color = UText, fontSize = 18.4.sp, fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(12.dp))
+                    Column(Modifier.padding(22.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Доступно обновление", color = UMuted, fontSize = 12.5.sp)
+                            Spacer(Modifier.weight(1f))
+                            // Версия — аккуратная пилюля справа, как в остальном UI.
+                            Text(
+                                r.version,
+                                color = UText,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .background(Color(0x1F6D7BFF), RoundedCornerShape(999.dp))
+                                    .padding(horizontal = 12.dp, vertical = 5.dp),
+                            )
+                        }
+                        Spacer(Modifier.height(14.dp))
                         if (r.description.isNotBlank()) {
-                            Text(r.description, color = UText.copy(alpha = .82f), fontSize = 14.sp)
-                            Spacer(Modifier.height(16.dp))
+                            // Ченджлоги бывают длинными — даём листать, иначе текст обрезается краем диалога.
+                            Column(
+                                Modifier
+                                    .heightIn(max = 300.dp)
+                                    .verticalScroll(rememberScrollState()),
+                            ) {
+                                Text(r.description, color = UText.copy(alpha = .82f), fontSize = 13.5.sp, lineHeight = 19.sp)
+                            }
+                            Spacer(Modifier.height(18.dp))
                         }
                         error?.let { Text(it, color = Color(0xFFFF5C76), fontSize = 12.sp); Spacer(Modifier.height(10.dp)) }
                         if (downloading) {

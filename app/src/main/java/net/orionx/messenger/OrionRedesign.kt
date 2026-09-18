@@ -6211,8 +6211,10 @@ private fun XConversationScreen(
                         runCatching { api.saveDraft(session.accessToken, conversation.id, session.userId, "", null) }
                     }
                     result.onSuccess {
-                        messages = messages.filterNot { it.id == localId }
+                        // Сначала подтягиваем серверную ленту — иначе оптимистичный
+                        // пузырь мигает: его нельзя убирать до появления оригинала.
                         refresh()
+                        messages = messages.filterNot { it.id == localId }
                         // «закрепить после публикации»: свежий пост — последний свой в ленте.
                         if (pinIt) {
                             val fresh = messages.lastOrNull { it.senderId == session.userId && it.id != localId }

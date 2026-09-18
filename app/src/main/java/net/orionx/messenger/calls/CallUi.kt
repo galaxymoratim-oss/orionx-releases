@@ -58,6 +58,29 @@ fun OrionCallScreen(
         }
     }
 
+    // Кольцевой сигнал ожидания («гудки») во время исходящего вызова — как у обычного телефона.
+    if (ui.state == CallState.RINGING) {
+        val context = androidx.compose.ui.platform.LocalContext.current
+        DisposableEffect(ui.state) {
+            var tone: android.media.ToneGenerator? = null
+            var cancelled = false
+            val thread = Thread {
+                while (!cancelled) {
+                    runCatching {
+                        tone = android.media.ToneGenerator(android.media.AudioManager.STREAM_VOICE_CALL, 70)
+                        tone?.startTone(android.media.ToneGenerator.TONE_SUP_RINGTONE, 2000)
+                    }
+                    runCatching { Thread.sleep(3000) }
+                }
+            }.apply { runCatching { start() } }
+            onDispose {
+                cancelled = true
+                runCatching { tone?.stopTone() }
+                runCatching { tone?.release() }
+            }
+        }
+    }
+
     Dialog(
         onDismissRequest = { if (!terminal) controller.hangUp() },
         properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
@@ -277,17 +300,24 @@ fun OrionIncomingCallDialog(
     onDecline: () -> Unit,
 ) {
     val context = LocalContext.current
-    val ringtone = remember(invite.id) {
+    // Рингтон зациклен: стандартный Ringtone.play() играет один раз и умолкает.
+    DisposableEffect(invite.id) {
+        val player = android.media.MediaPlayer()
+        var prepared = false
         runCatching {
-            android.media.RingtoneManager.getRingtone(
-                context,
-                android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_RINGTONE),
-            )
-        }.getOrNull()
-    }
-    DisposableEffect(invite.id, ringtone) {
-        runCatching { ringtone?.play() }
-        onDispose { runCatching { ringtone?.stop() } }
+            player.setDataSource(context, android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_RINGTONE))
+            player.isLooping = true
+            player.setAudioAttributes(android.media.AudioAttributes.Builder()
+                .setUsage(android.media.AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build())
+            player.setOnPreparedListener { it.start(); prepared = true }
+            player.prepareAsync()
+        }
+        onDispose {
+            runCatching { if (prepared) player.stop() }
+            runCatching { player.release() }
+        }
     }
 
     androidx.compose.ui.window.Dialog(onDismissRequest = onDecline) {
