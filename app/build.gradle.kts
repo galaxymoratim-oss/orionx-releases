@@ -12,8 +12,8 @@ android {
         applicationId = "net.orionx.messenger"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6083110
-        versionName = "6.9.30"
+        versionCode = 6083111
+        versionName = "6.9.31"
     }
 
     buildFeatures {

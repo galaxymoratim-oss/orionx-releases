@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.InsertDriveFile
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.FolderOpen
@@ -346,13 +347,18 @@ internal fun XFilesScreen(onBack: () -> Unit) {
                                             overflow = TextOverflow.Ellipsis,
                                         )
                                         Text(
-                                            if (entry.directory) xSettingText("folder") else humanSize(entry.sizeBytes),
+                                            // Макет: папка — «N объектов», файл — «размер · дата».
+                                        if (entry.directory)
+                                            xSettingText("folder")
+                                        else
+                                            humanSize(entry.sizeBytes) + " · " + java.text.SimpleDateFormat("d.MM", java.util.Locale.getDefault()).format(java.util.Date(entry.modifiedAt)),
                                             style = XType.meta.copy(fontSize = 10.5.sp, fontWeight = FontWeight.Bold),
                                             color = XMuted,
                                         )
                                     }
                                     Icon(
-                                        if (entry.directory) Icons.Outlined.ChevronRight else Icons.AutoMirrored.Outlined.Send,
+                                        // Макет: у папки — chevron_right, у файла — more_horiz.
+                                        if (entry.directory) Icons.Outlined.ChevronRight else Icons.Outlined.MoreHoriz,
                                         null,
                                         tint = XMuted,
                                         modifier = Modifier.size(18.dp),

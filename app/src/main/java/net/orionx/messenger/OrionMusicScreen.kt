@@ -23,6 +23,9 @@ import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,6 +81,14 @@ internal fun XMusicScreen(controller: MusicController, onBack: () -> Unit) {
     }
 
     val track = controller.current
+    // Макет: transition:width .3s linear — полоска скользит между опросами позиции.
+    val animatedProgress by animateFloatAsState(
+        targetValue = if (controller.durationMs() > 0)
+            (controller.positionMs.toFloat() / controller.durationMs()).coerceIn(0f, 1f)
+        else 0f,
+        animationSpec = tween(300, easing = LinearEasing),
+        label = "music-progress",
+    )
     val duration = controller.durationMs()
     val progress = if (duration > 0) (controller.positionMs.toFloat() / duration).coerceIn(0f, 1f) else 0f
 
@@ -116,7 +127,8 @@ internal fun XMusicScreen(controller: MusicController, onBack: () -> Unit) {
                         Icon(
                             if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                             xSettingText("like_action"),
-                            tint = if (isLiked) XRed else XText,
+                            // В макете неактивный лайк — приглушённый --mut.
+                            tint = if (isLiked) XRed else XMuted,
                             modifier = Modifier.size(19.dp),
                         )
                     }
@@ -137,7 +149,7 @@ internal fun XMusicScreen(controller: MusicController, onBack: () -> Unit) {
                         Box(Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(3.dp)).background(XSurfaceRaised)) {
                             Box(
                                 Modifier
-                                    .fillMaxWidth(progress)
+                                    .fillMaxWidth(animatedProgress)
                                     .fillMaxHeight()
                                     .clip(RoundedCornerShape(3.dp))
                                     .background(Brush.horizontalGradient(listOf(Color(0xFF8FB4FF), Color(0xFFFF9FC4)))),
@@ -310,6 +322,7 @@ private fun XMusicGhostButton(
         Modifier.size(40.dp).clip(RoundedCornerShape(14.dp)).clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(icon, description, tint = if (active) XAccent else XMuted, modifier = Modifier.size(19.dp))
+        // В макете активное состояние — просто --txt, без синего акцента.
+        Icon(icon, description, tint = if (active) XText else XMuted, modifier = Modifier.size(19.dp))
     }
 }

@@ -169,7 +169,7 @@ internal fun XWeatherScreen(onBack: () -> Unit) {
                     }
 
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        XWeatherMetric(Icons.Outlined.Air, "${current.windKph} км/ч", xSettingText("wind"), Modifier.weight(1f))
+                        XWeatherMetric(Icons.Outlined.Air, "${(current.windKph / 3.6).toInt()}", xSettingText("wind"), Modifier.weight(1f))
                         XWeatherMetric(Icons.Outlined.WaterDrop, "${current.humidity} %", xSettingText("humidity"), Modifier.weight(1f))
                         XWeatherMetric(Icons.Outlined.Compress, "${current.pressureMm} мм", xSettingText("pressure"), Modifier.weight(1f))
                     }

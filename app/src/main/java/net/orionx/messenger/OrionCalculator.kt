@@ -86,7 +86,12 @@ internal object XCalcEngine {
             }
             // After «=» a fresh digit starts a new sum, so the old line does not hang around.
             val expression = if (state.operator == null && state.expression.endsWith("=")) "" else state.expression
-            return state.copy(current = value, fresh = false, expression = expression)
+            // Макет: пока пользователь набирает второй операнд, выражение живое — «8 + 5».
+            val liveExpression =
+                if (state.operator != null && !state.fresh)
+                    format(state.accumulator ?: 0.0) + " " + glyph(state.operator) + " " + value
+                else expression
+            return state.copy(current = value, fresh = false, expression = liveExpression)
         }
 
         val b = state.current.toDoubleOrNull() ?: 0.0

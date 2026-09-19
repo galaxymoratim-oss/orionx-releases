@@ -14,6 +14,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -41,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -317,10 +319,22 @@ internal fun XQrScannerScreen(
 
             // Result card.
             val peer = found
+            // pop .32s ease-out: 0 → 1 за один проход при появлении карточки.
+            val popProgress = remember { androidx.compose.animation.core.Animatable(0f) }
+            LaunchedEffect(peer?.id) {
+                popProgress.snapTo(0f)
+                popProgress.animateTo(1f, androidx.compose.animation.core.tween(320, easing = androidx.compose.animation.core.CubicBezierEasing(.2f, .9f, .2f, 1f)))
+            }
             if (state == XScanState.FOUND && peer != null) {
+                // Макет: animation:pop .32s ease-out — карточка всплывает снизу.
                 Row(
                     Modifier
                         .align(Alignment.BottomCenter)
+                        .graphicsLayer {
+                            val p = popProgress.value
+                            alpha = p
+                            translationY = (1f - p) * 40f
+                        }
                         .padding(14.dp)
                         .fillMaxWidth()
                         .xShadow(RoundedCornerShape(26.dp))
@@ -488,7 +502,8 @@ private fun XQrViewfinder(scanning: Boolean) {
     val y by sweep.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(2200, easing = LinearEasing), RepeatMode.Reverse),
+        // Макет: @keyframes scan 2.2s ease-in-out — линия задерживается у краёв.
+        animationSpec = infiniteRepeatable(tween(2200, easing = CubicBezierEasing(.42f, 0f, .58f, 1f)), RepeatMode.Reverse),
         label = "qr-sweep-y",
     )
     XQrBrackets(sweepY = y)

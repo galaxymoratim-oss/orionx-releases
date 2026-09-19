@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.AlternateEmail
 import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material.icons.outlined.BrightnessAuto
 import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.Devices
 import androidx.compose.material.icons.outlined.Download
@@ -281,10 +282,11 @@ internal fun XSettingsScreen(
                                 Modifier.clip(XSetShape.tray).background(XSurfaceRaised).padding(3.dp),
                                 horizontalArrangement = Arrangement.spacedBy(3.dp),
                             ) {
+                                // Макет: порядок light/dark/auto, системная — brightness_auto.
                                 listOf(
-                                    "system" to Icons.Outlined.Smartphone,
                                     "light" to Icons.Outlined.LightMode,
                                     "dark" to Icons.Outlined.DarkMode,
+                                    "system" to Icons.Outlined.BrightnessAuto,
                                 ).forEach { (key, icon) ->
                                     val active = runtime.theme == key
                                     val bg by animateColorAsState(if (active) XText else Color.Transparent, tween(200), label = "theme-bg")

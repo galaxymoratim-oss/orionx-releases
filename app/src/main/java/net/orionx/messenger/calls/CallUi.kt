@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CallEnd
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Cameraswitch
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.MicOff
@@ -22,12 +23,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
@@ -90,7 +94,7 @@ fun OrionCallScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFF02040D), Color(0xFF07091B), Color(0xFF11092B))
+                    listOf(Color(0xFF4A1C11), Color(0xFF3A1A1D), Color(0xFF2C1628), Color(0xFF1E1533), Color(0xFF141630), Color(0xFF0B0C12))
                 )
             )
             .statusBarsPadding()
@@ -107,26 +111,55 @@ fun OrionCallScreen(
         } else {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Surface(
-                        modifier = Modifier.size(138.dp),
-                        shape = CircleShape,
-                        color = Color(0xFF372071),
-                        border = androidx.compose.foundation.BorderStroke(2.dp, Color(0xFF9A5BFF)),
-                        shadowElevation = 20.dp,
+                    // Макет: 150dp диск с тёплым радиальным градиентом и мягкой тенью.
+                    Box(
+                        Modifier
+                            .size(150.dp)
+                            .shadow(24.dp, CircleShape)
+                            .clip(CircleShape)
+                            .background(
+                                Brush.radialGradient(
+                                    colorStops = arrayOf(
+                                        0f to Color(0xFFFFD9B4),
+                                        .44f to Color(0xFFF79AC6),
+                                        .74f to Color(0xFF9B8CFF),
+                                        1f to Color(0xFF3F2585),
+                                    ),
+                                    center = Offset(.34f, .28f),
+                                )
+                            ),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(
-                                initials(ui.peerName),
-                                color = Color.White,
-                                fontSize = 44.sp,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
+                        Text(
+                            initials(ui.peerName),
+                            color = Color.White,
+                            fontSize = 46.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
                     }
                     Spacer(Modifier.height(22.dp))
-                    Text(ui.peerName.ifBlank { "OrionX" }, color = Color.White, fontSize = 28.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                    Text(
+                        ui.peerName.ifBlank { "OrionX" },
+                        color = Color.White,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = (-.03).em,
+                        textAlign = TextAlign.Center,
+                    )
                     Spacer(Modifier.height(8.dp))
-                    Text(callStatus(ui), color = Color(0xFFC1BCD5), fontSize = 15.sp)
+                    Text(callStatus(ui), color = Color.White.copy(alpha = .55f), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(14.dp))
+                    // Макет: пилюля «сквозное шифрование» с замком под таймером.
+                    Row(
+                        Modifier
+                            .background(Color(0x14FFFFFF), RoundedCornerShape(999.dp))
+                            .padding(horizontal = 15.dp, vertical = 9.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(7.dp),
+                    ) {
+                        Icon(Icons.Outlined.Lock, null, tint = Color.White, modifier = Modifier.size(15.dp))
+                        Text("сквозное шифрование", color = Color.White, fontSize = 11.5.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }
@@ -135,6 +168,19 @@ fun OrionCallScreen(
             Modifier.align(Alignment.TopCenter).padding(top = 18.dp, start = 20.dp, end = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            if (!isVideo) {
+                // Макет: чёрная пилюля «защищённый звонок» над шапкой.
+                Text(
+                    "защищённый звонок",
+                    color = Color(0xFF101014),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    letterSpacing = .18.em,
+                    modifier = Modifier
+                        .background(Color(0xFFF2F1F5), RoundedCornerShape(999.dp))
+                        .padding(horizontal = 20.dp, vertical = 12.dp),
+                )
+            }
             if (isVideo) {
                 Text(ui.peerName.ifBlank { "OrionX" }, color = Color.White, fontSize = 21.sp, fontWeight = FontWeight.Bold)
                 Text(callStatus(ui), color = Color(0xFFD2CDE0), fontSize = 13.sp)
@@ -177,34 +223,23 @@ fun OrionCallScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                CallControl(
-                    label = if (ui.muted) "Включить" else "Микрофон",
-                    selected = ui.muted,
-                    onClick = controller::toggleMute,
-                ) {
-                    Icon(if (ui.muted) Icons.Outlined.MicOff else Icons.Outlined.Mic, null, tint = Color.White)
+                // Макет: четыре круга 62dp на сплошном --sf, без подписей под кнопками.
+                CallControl(selected = ui.muted, onClick = controller::toggleMute) {
+                    Icon(if (ui.muted) Icons.Outlined.MicOff else Icons.Outlined.Mic, null, tint = Color.White, modifier = Modifier.size(24.dp))
                 }
-                CallControl(
-                    label = "Динамик",
-                    selected = ui.speaker,
-                    onClick = controller::toggleSpeaker,
-                ) {
-                    Icon(if (ui.speaker) Icons.Outlined.VolumeUp else Icons.Outlined.VolumeOff, null, tint = Color.White)
+                CallControl(selected = ui.speaker, onClick = controller::toggleSpeaker) {
+                    Icon(if (ui.speaker) Icons.Outlined.VolumeUp else Icons.Outlined.VolumeOff, null, tint = Color.White, modifier = Modifier.size(24.dp))
                 }
                 if (isVideo) {
-                    CallControl(
-                        label = "Камера",
-                        selected = !ui.cameraEnabled,
-                        onClick = controller::toggleCamera,
-                    ) {
-                        Icon(if (ui.cameraEnabled) Icons.Outlined.Videocam else Icons.Outlined.VideocamOff, null, tint = Color.White)
+                    CallControl(onClick = controller::toggleCamera) {
+                        Icon(if (ui.cameraEnabled) Icons.Outlined.Videocam else Icons.Outlined.VideocamOff, null, tint = Color.White, modifier = Modifier.size(24.dp))
                     }
-                    CallControl(label = "Сменить", onClick = controller::switchCamera) {
-                        Icon(Icons.Outlined.Cameraswitch, null, tint = Color.White)
+                    CallControl(onClick = controller::switchCamera) {
+                        Icon(Icons.Outlined.Cameraswitch, null, tint = Color.White, modifier = Modifier.size(24.dp))
                     }
                 }
-                CallControl(label = "Завершить", danger = true, onClick = controller::hangUp) {
-                    Icon(Icons.Outlined.CallEnd, null, tint = Color.White)
+                CallControl(danger = true, onClick = controller::hangUp) {
+                    Icon(Icons.Outlined.CallEnd, null, tint = Color.White, modifier = Modifier.size(24.dp))
                 }
             }
         }
@@ -214,7 +249,6 @@ fun OrionCallScreen(
 
 @Composable
 private fun CallControl(
-    label: String,
     selected: Boolean = false,
     danger: Boolean = false,
     onClick: () -> Unit,
@@ -223,19 +257,18 @@ private fun CallControl(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Surface(
             onClick = onClick,
-            modifier = Modifier.size(if (danger) 62.dp else 54.dp),
+            modifier = Modifier.size(62.dp),
             shape = CircleShape,
+            // Макет: сплошной --sf, опасная кнопка #FF5C76; активная — мягкая подсветка.
             color = when {
-                danger -> Color(0xFFE84D68)
+                danger -> Color(0xFFFF5C76)
                 selected -> Color(0xFF7040D8)
-                else -> Color(0xB92A2B3D)
+                else -> Color(0xFF191920)
             },
-            border = if (danger) null else androidx.compose.foundation.BorderStroke(1.dp, Color(0x554F4D68)),
+            shadowElevation = 12.dp,
         ) {
             Box(contentAlignment = Alignment.Center) { icon() }
         }
-        Spacer(Modifier.height(6.dp))
-        Text(label, color = Color(0xFFD4D0DE), fontSize = 10.sp, maxLines = 1)
     }
 }
 
